@@ -1,7 +1,7 @@
 import { loadSeries } from "@/parsers/by-domain/mult-fan.tv";
 
 loadSeries({
-  destination: "./data",
+  destination: "./data/bobsburgers",
   subdomain: "bobsburgers",
-  seasonsToLoad: [7],
+  seasonsToDownload: [7],
 });
