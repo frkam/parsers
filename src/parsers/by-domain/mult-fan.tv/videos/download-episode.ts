@@ -134,6 +134,8 @@ const downloadEpisodeVoice = async ({
       );
     }
   }
+
+  await page.close();
 };
 
 export const downloadEpisode = async ({
