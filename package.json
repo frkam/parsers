@@ -13,6 +13,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
+    "@types/bytes": "^3.1.5",
+    "bytes": "^3.1.2",
+    "ofetch": "^1.4.1",
     "patchright": "^1.52.5",
     "pino": "^9.7.0",
     "pino-pretty": "^13.1.1",

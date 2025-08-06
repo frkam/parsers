@@ -1,3 +1,3 @@
-import { loadSeries } from "./videos";
+import { downloadVideos } from "./videos";
 
-export { loadSeries };
+export { downloadVideos };

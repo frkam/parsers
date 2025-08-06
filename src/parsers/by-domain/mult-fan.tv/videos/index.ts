@@ -4,8 +4,9 @@ import { domain } from "../constants";
 import { logger } from "./logger";
 import { getSeasons } from "./get-seasons";
 import { getEpisodes } from "./get-episodes";
-import { delay, getRandomNumberInRange } from "@/lib/delay";
 import { downloadEpisode } from "./download-episode";
+import { delay, getRandomNumberInRange } from "@/lib/delay";
+import { SECONDS_IN_MINUTE } from "@/lib/time";
 
 type LoadVideosParams = {
   destination: string;
@@ -14,9 +15,7 @@ type LoadVideosParams = {
   voicesToDownload?: number[];
 };
 
-const SECONDS_IN_MINUTE = 60;
-
-export const loadSeries = async ({
+export const downloadVideos = async ({
   destination,
   subdomain,
   seasonsToDownload,
@@ -70,34 +69,42 @@ export const loadSeries = async ({
       logger.info(`Season "${season.id}" has "${episodes.length}" episodes`);
 
       for (const episode of episodes) {
-        logger.info(
-          `Downloading episode "${episode.id}" from season "${season.id}"`
-        );
+        try {
+          logger.info(
+            `Downloading episode "${episode.id}" from season "${season.id}"`
+          );
 
-        await downloadEpisode({
-          context,
-          episode,
-          season,
-          destination,
-          voicesToDownload,
-        });
+          await downloadEpisode({
+            context,
+            episode,
+            season,
+            destination,
+            voicesToDownload,
+          });
 
-        logger.info(
-          `Episode "${episode.id}" from season "${season.id}" downloaded`
-        );
+          logger.info(
+            `Episode "${episode.id}" from season "${season.id}" downloaded`
+          );
 
-        const delayTime = getRandomNumberInRange(
-          1 * SECONDS_IN_MINUTE,
-          3 * SECONDS_IN_MINUTE
-        );
+          const delayTime = getRandomNumberInRange(
+            0.5 * SECONDS_IN_MINUTE,
+            1 * SECONDS_IN_MINUTE
+          );
 
-        logger.info(
-          `Waiting time before next episode: ${Math.floor(
-            delayTime / SECONDS_IN_MINUTE
-          )} minutes`
-        );
+          logger.info(
+            `Waiting time before downloading next episode: ${Math.floor(
+              delayTime / SECONDS_IN_MINUTE
+            )} minutes`
+          );
 
-        await delay(delayTime);
+          await delay(delayTime);
+        } catch (error) {
+          if (error instanceof Error) {
+            logger.error(
+              `Failed to download episode "${episode.id}" from season "${season.id}": ${error.message}`
+            );
+          }
+        }
       }
     }
   } catch (error) {

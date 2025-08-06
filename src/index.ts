@@ -1,6 +1,6 @@
-import { loadSeries } from "@/parsers/by-domain/mult-fan.tv";
+import { downloadVideos } from "@/parsers/by-domain/mult-fan.tv";
 
-loadSeries({
+downloadVideos({
   destination: "./data/bobsburgers",
   subdomain: "bobsburgers",
   seasonsToDownload: [7],
